@@ -33,18 +33,6 @@ const DocumentsPage = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-3xl font-bold text-[#19154E]">Documents</h2>
                     <div className="flex items-center space-x-2">
-                        <button
-                            className="bg-white border border-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={selectedFiles.length < 2}
-                        >
-                            Chat Group <FiChevronDown />
-                        </button>
-                        <button
-                            className="bg-black text-white font-semibold px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={selectedFiles.length === 0}
-                        >
-                            Chat All
-                        </button>
                         <button className="bg-black text-white font-semibold px-4 py-2 rounded-lg">Upload File</button>
                     </div>
                 </div>

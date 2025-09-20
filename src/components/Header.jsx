@@ -49,7 +49,7 @@ const Header = () => {
         <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
             <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                 <motion.div whileHover={{ scale: 1.05 }}>
-                    <RouterLink to="/" className="text-2xl font-bold text-[#19154E]">Something AI</RouterLink>
+                    <RouterLink to="/" className="text-2xl font-bold text-[#19154E]">Aeztrix AI</RouterLink>
                 </motion.div>
 
                 <nav className="hidden md:flex items-center space-x-8">

@@ -2,10 +2,9 @@
 // This file contains all API calls and can be easily modified to point to real endpoints
 
 // Base configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
-const API_TIMEOUT = 10000; // 10 seconds
+const API_BASE_URL = 'http://localhost:3001/api';
+const API_TIMEOUT = 10000; 
 
-// Helper function to create API request
 const createRequest = async (endpoint, options = {}) => {
     const url = `${API_BASE_URL}${endpoint}`;
     const config = {
@@ -325,6 +324,80 @@ export const userService = {
     }
 };
 
+// Contact Services
+export const contactService = {
+    // Send contact message
+    sendMessage: async (messageData) => {
+        await simulateDelay(1500); // Simulate email sending delay
+        
+        // Validate form data
+        if (!messageData.name || !messageData.email || !messageData.message) {
+            return { success: false, error: 'All fields are required' };
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(messageData.email)) {
+            return { success: false, error: 'Please enter a valid email address' };
+        }
+
+        // Simulate successful email sending to aeztrix5@gmail.com
+        const emailData = {
+            id: Date.now(),
+            to: 'aeztrix5@gmail.com',
+            from: messageData.email,
+            name: messageData.name,
+            message: messageData.message,
+            timestamp: new Date().toISOString(),
+            status: 'sent',
+            subject: `New Contact Form Submission from ${messageData.name}`
+        };
+
+        // Log the email data for development
+        console.log('📧 Contact form submission received:');
+        console.log('To: aeztrix5@gmail.com');
+        console.log('From:', messageData.email);
+        console.log('Name:', messageData.name);
+        console.log('Message:', messageData.message);
+        console.log('Timestamp:', emailData.timestamp);
+        
+        // In a real implementation, this would send an actual email using:
+        // - SMTP (Nodemailer)
+        // - SendGrid API
+        // - AWS SES
+        // - Or any other email service
+        
+        return { success: true, data: emailData };
+    },
+
+    // Get contact messages (admin only)
+    getMessages: async () => {
+        await simulateDelay(800);
+        
+        // Simulate contact messages
+        const messages = [
+            {
+                id: 1,
+                name: "John Doe",
+                email: "john@example.com",
+                message: "Great service! I love using Aeztrix AI for document analysis.",
+                timestamp: "2024-01-15T10:30:00Z",
+                status: "read"
+            },
+            {
+                id: 2,
+                name: "Jane Smith",
+                email: "jane@example.com",
+                message: "How can I integrate this with my existing workflow?",
+                timestamp: "2024-01-14T15:45:00Z",
+                status: "unread"
+            }
+        ];
+
+        return { success: true, data: messages };
+    }
+};
+
 // Error handling utility
 export const handleApiError = (error) => {
     console.error('API Error:', error);
@@ -347,5 +420,6 @@ export default {
     fileService,
     documentService,
     userService,
+    contactService,
     handleApiError
 };

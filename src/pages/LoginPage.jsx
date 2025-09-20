@@ -136,7 +136,7 @@ const LoginPage = () => {
                 
                 <div className="hidden md:flex flex-col items-center justify-center bg-[#193A83] p-12 text-white text-center">
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                        <h1 className="text-4xl font-bold mb-4">Something AI</h1>
+                        <h1 className="text-4xl font-bold mb-4">Aeztrix AI</h1>
                         <p className="text-lg text-indigo-100">Unlock insights from your documents with the power of AI.</p>
                     </motion.div>
                 </div>

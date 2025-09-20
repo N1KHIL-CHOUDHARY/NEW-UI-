@@ -25,12 +25,12 @@ const HomePage = () => {
     const features = [
         {
             title: "Generate Summaries",
-            description: "something AI summarizes long documents in seconds, saving you hours per week.",
+            description: "Aeztrix AI summarizes long documents in seconds, saving you hours per week.",
             image: "/placeholder-summary.png"
         },
         {
             title: "Get Highlighted Citations",
-            description: "something AI gives you a clickable page number and highlight reference with every answer.",
+            description: "Aeztrix AI gives you a clickable page number and highlight reference with every answer.",
             image: "/placeholder-citations.png"
         }
     ];

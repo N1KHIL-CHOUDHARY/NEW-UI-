@@ -37,7 +37,7 @@ const DashboardHeader = () => {
         <header className="w-full bg-white border-b border-gray-200">
             <div className="w-full px-6 py-4 flex justify-between items-center">
                 <div className="flex items-center space-x-8">
-                    <Link to="/" className="text-xl font-bold text-[#19154E]">Something AI</Link>
+                    <Link to="/" className="text-xl font-bold text-[#19154E]">Aeztrix AI</Link>
                     <nav className="hidden md:flex items-center space-x-6">
                         {navLinks.map(link => (
                             <NavLink
