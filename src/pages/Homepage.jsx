@@ -3,19 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Element, scroller } from 'react-scroll';
 import { FiChevronDown } from 'react-icons/fi';
-import { FaFilePdf, FaFileWord, FaFilePowerpoint, FaFileAlt } from 'react-icons/fa';
+import { FaReact } from 'react-icons/fa';
+import { SiFastapi, SiGooglecloud, SiTailwindcss, SiFramer,SiPython } from 'react-icons/si';
 
 const HomePage = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // This effect handles scrolling when arriving from another page with a hash link
     useEffect(() => {
         if (location.hash) {
             const element = location.hash.substring(1);
             scroller.scrollTo(element, {
                 duration: 800,
-                delay: 100, // Add a slight delay to ensure the page has rendered
+                delay: 100,
                 smooth: 'easeInOutQuart',
                 offset: -80
             });
@@ -35,11 +35,26 @@ const HomePage = () => {
         }
     ];
 
-    const faqs = [
+      const faqs = [
+
         { question: "What file types are supported?", answer: "Our platform currently supports PDF and DOCX file formats. We are actively working on expanding our support for other document types." },
+
         { question: "How secure is my data?", answer: "We prioritize your data's security. All uploaded documents are encrypted and processed in a secure, isolated environment." },
+
         { question: "Can I use this for legal documents?", answer: "While our AI provides a powerful analysis, it is not a substitute for professional legal advice. We recommend consulting with a qualified attorney for any legal matters." },
+
         { question: "What languages do you support?", answer: "Our AI can analyze documents in multiple languages. For a full list of supported languages, please refer to our documentation." }
+
+    ];
+    
+    // Added a 'color' property to each tech item
+    const techStack = [
+        { name: 'React', icon: <FaReact size={32} />, color: 'text-blue-500' },
+        { name: 'FastAPI', icon: <SiFastapi size={32} />, color: 'text-green-500' },
+        { name: 'Google Cloud', icon: <SiGooglecloud size={32} />, color: 'text-red-500' },
+        { name: 'Tailwind CSS', icon: <SiTailwindcss size={32} />, color: 'text-cyan-400' },
+        { name: 'Framer Motion', icon: <SiFramer size={30} />, color: 'text-purple-500' },
+        { name: 'Python', icon: <SiPython size={32} />, color: 'text-yellow-500' },
     ];
     
     const heroVariants = {
@@ -87,7 +102,7 @@ const HomePage = () => {
     };
 
     return (
-        <div className="bg-white font-sans text-[#19154E] overflow-x-hidden w-screen">
+       <div className="bg-white font-sans text-[#19154E] overflow-x-hidden w-screen">
             <main>
                 <section className="container min-h-screen mx-auto px-6 pt-24 pb-16 text-center flex flex-col justify-center">
                     <motion.div
@@ -103,12 +118,23 @@ const HomePage = () => {
                             Use AI to summarize, query, and transcribe your files and meetings in seconds. Generate mind maps, presentations, and content from your files. Get a citation with every response.
                         </motion.p>
                         
-                        <motion.div variants={heroVariants} className="flex items-center justify-center space-x-2 mb-6">
-                            <div className="flex items-center p-2 bg-red-100 text-red-600 rounded-md"><FaFilePdf className="mr-1" /> PDF</div>
-                            <div className="flex items-center p-2 bg-blue-100 text-blue-600 rounded-md"><FaFileWord className="mr-1" /> DOC</div>
-                            <div className="flex items-center p-2 bg-orange-100 text-orange-600 rounded-md"><FaFilePowerpoint className="mr-1" /> PPT</div>
-                            <div className="flex items-center p-2 bg-gray-100 text-gray-600 rounded-md"><FaFileAlt className="mr-1" /> TXT</div>
-                            <div className="p-2 bg-gray-200 text-gray-700 rounded-md font-semibold">+ more</div>
+                        <motion.div variants={heroVariants} className="w-full max-w-2xl my-8">
+                             <div className="relative w-full overflow-hidden">
+                                <motion.div
+                                    className="flex gap-12"
+                                    animate={{ x: ['0%', '-100%'] }}
+                                    transition={{ ease: 'linear', duration: 20, repeat: Infinity }}
+                                >
+                                    {[...techStack, ...techStack].map((tech, index) => (
+                                        <div key={index} className={`flex items-center gap-3 flex-shrink-0 ${tech.color}`}>
+                                            {tech.icon}
+                                            <span className="font-semibold text-lg text-gray-700">{tech.name}</span>
+                                        </div>
+                                    ))}
+                                </motion.div>
+                                <div className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-white to-transparent" />
+                                <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-white to-transparent" />
+                            </div>
                         </motion.div>
                         
                         <motion.div variants={heroVariants} className="flex flex-col items-center">

@@ -1,17 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiUser, FiLogOut } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
 
 const DashboardHeader = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
     const navLinks = [
         { name: "Dashboard", path: "/dashboard" },
         { name: "Documents", path: "/dashboard/documents" }, // Assuming this is your files page
         { name: "Contact Us", path: "/contact" },
     ];
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+        setIsMenuOpen(false);
+    };
 
     // This effect handles closing the menu when clicking outside of it
     useEffect(() => {
@@ -50,7 +59,7 @@ const DashboardHeader = () => {
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold text-gray-700 select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#193A83]"
                     >
-                        U
+                        {user ? user.name.charAt(0).toUpperCase() : 'U'}
                     </button>
                     <AnimatePresence>
                         {isMenuOpen && (
@@ -71,10 +80,7 @@ const DashboardHeader = () => {
                                         <span>Profile</span>
                                     </Link>
                                     <button
-                                        onClick={() => {
-                                            // Handle logout logic here
-                                            setIsMenuOpen(false);
-                                        }}
+                                        onClick={handleLogout}
                                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                                     >
                                         <FiLogOut />

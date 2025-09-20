@@ -13,7 +13,6 @@ const Footer = () => {
         LearnMore: [
             { name: "About Us", path: "/about" },
             { name: "FAQ", path: "/faq" },
-            { name: "Tutorials", path: "/tutorials" }
         ]
     };
 
@@ -22,8 +21,7 @@ const Footer = () => {
             <div className="container mx-auto px-6 py-12">
                 <div className="grid md:grid-cols-4 gap-8">
                     <div className="md:col-span-1">
-                        <h3 className="text-2xl font-bold text-white mb-2">Coral AI</h3>
-                        <p className="text-sm">Pearl Labs LLC<br/>8 The Green, Ste A<br/>Dover, DE 19901</p>
+                        
                     </div>
 
                     <div className="md:col-span-1">

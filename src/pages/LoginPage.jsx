@@ -1,15 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const { login, loginWithGoogle, isAuthenticated, loading } = useAuth();
+    const navigate = useNavigate();
 
-    const OAuthButton = ({ icon, text }) => (
-        <button className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (!loading && isAuthenticated) {
+            navigate('/dashboard');
+        }
+    }, [isAuthenticated, loading, navigate]);
+
+    const handleGoogleLogin = async () => {
+        setIsLoading(true);
+        setError('');
+        const result = await loginWithGoogle();
+        if (result.success) {
+            navigate('/dashboard');
+        } else {
+            setError(result.error);
+        }
+        setIsLoading(false);
+    };
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError('');
+        
+        const result = await login(email, password);
+        if (result.success) {
+            navigate('/dashboard');
+        } else {
+            setError(result.error);
+        }
+        setIsLoading(false);
+    };
+
+    const OAuthButton = ({ icon, text, onClick, disabled }) => (
+        <button 
+            onClick={onClick}
+            disabled={disabled}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
             {icon}
             <span className="font-medium text-gray-700">{text}</span>
         </button>
@@ -28,7 +70,12 @@ const LoginPage = () => {
                     <p className="text-gray-600 mb-8">Log in to continue to your dashboard.</p>
 
                     <div className="space-y-4 mb-8">
-                        <OAuthButton icon={<FcGoogle size={22} />} text="Continue with Google" />
+                        <OAuthButton 
+                            icon={<FcGoogle size={22} />} 
+                            text="Continue with Google" 
+                            onClick={handleGoogleLogin}
+                            disabled={isLoading}
+                        />
                     </div>
 
                     <div className="flex items-center my-8">
@@ -37,14 +84,22 @@ const LoginPage = () => {
                         <hr className="flex-grow border-gray-300" />
                     </div>
 
-                    <form className="space-y-6">
+                    {error && (
+                        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                            {error}
+                        </div>
+                    )}
+                    
+                    <form onSubmit={handleFormSubmit} className="space-y-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                             <input 
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#193A83]"
+                                required
+                                disabled={isLoading}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#193A83] disabled:opacity-50"
                             />
                         </div>
                         <div>
@@ -56,15 +111,19 @@ const LoginPage = () => {
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#193A83]"
+                                required
+                                disabled={isLoading}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#193A83] disabled:opacity-50"
                             />
                         </div>
                         <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="w-full bg-[#193A83] text-white font-bold py-3 rounded-lg shadow-md hover:bg-opacity-90 transition-all"
+                            type="submit"
+                            disabled={isLoading}
+                            whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                            whileTap={{ scale: isLoading ? 1 : 0.98 }}
+                            className="w-full bg-[#193A83] text-white font-bold py-3 rounded-lg shadow-md hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Log In
+                            {isLoading ? 'Logging in...' : 'Log In'}
                         </motion.button>
                     </form>
                     

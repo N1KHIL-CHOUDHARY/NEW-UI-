@@ -1,12 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
+import { useNavigate } from 'react-router-dom';
 import { FiUpload, FiUploadCloud, FiX, FiFile, FiCheckCircle, FiSend, FiCopy } from 'react-icons/fi';
 
-const FileUploadModal = ({ closeModal, onUploadSuccess }) => {
+const FileUploadModal = ({ closeModal }) => {
     const [files, setFiles] = useState([]);
     const [uploading, setUploading] = useState(false);
     const [progress, setProgress] = useState(0);
+    const navigate = useNavigate();
 
     const onDrop = useCallback(acceptedFiles => {
         setFiles([acceptedFiles[0]]); // Only allow one file for this flow
@@ -23,11 +25,12 @@ const FileUploadModal = ({ closeModal, onUploadSuccess }) => {
         }
         if (progress >= 100) {
             setTimeout(() => {
-                onUploadSuccess(); // Call the success function from the parent
                 closeModal();
+                // Navigate to documents page after successful upload
+                navigate('/dashboard/documents');
             }, 500);
         }
-    }, [uploading, progress, onUploadSuccess, closeModal]);
+    }, [uploading, progress, closeModal, navigate]);
 
     return (
         <motion.div
@@ -166,7 +169,7 @@ const Dashboard = () => {
                 </div>
             </div>
             <AnimatePresence>
-                {isModalOpen && <FileUploadModal closeModal={() => setIsModalOpen(false)} onUploadSuccess={() => setIsFileActive(true)} />}
+                {isModalOpen && <FileUploadModal closeModal={() => setIsModalOpen(false)} />}
             </AnimatePresence>
         </>
     );

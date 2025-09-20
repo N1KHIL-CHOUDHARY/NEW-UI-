@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiArrowUp, FiEdit2, FiTrash2, FiChevronDown, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-const FilesPage = () => {
+const DocumentsPage = () => {
     const [files] = useState([
         { id: "123", title: "NIKHIL-CHOUDHARY_Linux-Process-API-fork-wait-exec.pdf", date: "Today" },
         { id: "124", title: "Project Alpha - Q3 Financial Report.pdf", date: "Yesterday" },
@@ -20,7 +20,7 @@ const FilesPage = () => {
     };
 
     const handleSelectOne = (id) => {
-        setSelectedFiles(prev => 
+        setSelectedFiles(prev =>
             prev.includes(id) ? prev.filter(fileId => fileId !== id) : [...prev, id]
         );
     };
@@ -33,13 +33,13 @@ const FilesPage = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-3xl font-bold text-[#19154E]">Documents</h2>
                     <div className="flex items-center space-x-2">
-                        <button 
+                        <button
                             className="bg-white border border-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={selectedFiles.length < 2}
                         >
                             Chat Group <FiChevronDown />
                         </button>
-                        <button 
+                        <button
                             className="bg-black text-white font-semibold px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={selectedFiles.length === 0}
                         >
@@ -58,8 +58,8 @@ const FilesPage = () => {
                     <div className="p-4 border-b border-gray-200">
                         <div className="grid grid-cols-12 gap-4 text-sm font-semibold text-gray-500">
                             <div className="col-span-1 flex items-center">
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     className="rounded border-gray-300"
                                     checked={isAllSelected}
                                     onChange={handleSelectAll}
@@ -75,8 +75,8 @@ const FilesPage = () => {
                         {files.map(file => (
                             <div key={file.id} className="grid grid-cols-12 gap-4 items-center p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">
                                 <div className="col-span-1">
-                                    <input 
-                                        type="checkbox" 
+                                    <input
+                                        type="checkbox"
                                         className="rounded border-gray-300"
                                         checked={selectedFiles.includes(file.id)}
                                         onChange={() => handleSelectOne(file.id)}
@@ -119,4 +119,4 @@ const FilesPage = () => {
     );
 };
 
-export default FilesPage;
+export default DocumentsPage;
