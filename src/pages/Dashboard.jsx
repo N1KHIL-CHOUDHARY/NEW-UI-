@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import { FiUpload, FiUploadCloud, FiX, FiFile, FiCheckCircle, FiSend, FiCopy } from 'react-icons/fi';
+import { useFileUpload } from '../hooks/useFileUpload';
 
 const FileUploadModal = ({ closeModal }) => {
     const [files, setFiles] = useState([]);
-    const [uploading, setUploading] = useState(false);
-    const [progress, setProgress] = useState(0);
     const navigate = useNavigate();
+    const { uploading, progress, error, uploadFile, resetUpload } = useFileUpload();
 
     const onDrop = useCallback(acceptedFiles => {
         setFiles([acceptedFiles[0]]); // Only allow one file for this flow
@@ -16,21 +16,18 @@ const FileUploadModal = ({ closeModal }) => {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: {'application/pdf': ['.pdf']}, multiple: false });
 
-    useEffect(() => {
-        if (uploading && progress < 100) {
-            const timer = setInterval(() => {
-                setProgress(prev => (prev >= 100 ? 100 : prev + 10));
-            }, 100);
-            return () => clearInterval(timer);
-        }
-        if (progress >= 100) {
+    const handleUpload = async () => {
+        if (files.length === 0) return;
+        
+        const result = await uploadFile(files[0]);
+        
+        if (result.success) {
             setTimeout(() => {
                 closeModal();
-                // Navigate to documents page after successful upload
                 navigate('/dashboard/documents');
             }, 500);
         }
-    }, [uploading, progress, closeModal, navigate]);
+    };
 
     return (
         <motion.div
@@ -53,6 +50,11 @@ const FileUploadModal = ({ closeModal }) => {
                     <>
                         <div className="p-6 border-b border-gray-200"><h3 className="text-xl font-bold text-[#19154E]">Upload File</h3></div>
                         <div className="p-6">
+                            {error && (
+                                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                                    {error}
+                                </div>
+                            )}
                             <div {...getRootProps()} className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer ${isDragActive ? 'border-black bg-gray-50' : 'border-gray-300'}`}>
                                 <input {...getInputProps()} />
                                 <FiUploadCloud className="mx-auto text-4xl text-gray-400 mb-2" />
@@ -63,12 +65,13 @@ const FileUploadModal = ({ closeModal }) => {
                         </div>
                         <div className="bg-gray-50 px-6 py-4 flex justify-end">
                             <motion.button
-                                onClick={() => setUploading(true)}
-                                disabled={files.length === 0}
-                                className="bg-black text-white font-semibold px-5 py-2 rounded-lg disabled:bg-gray-400"
-                                whileHover={{ scale: files.length > 0 ? 1.05 : 1 }} whileTap={{ scale: files.length > 0 ? 0.95 : 1 }}
+                                onClick={handleUpload}
+                                disabled={files.length === 0 || uploading}
+                                className="bg-black text-white font-semibold px-5 py-2 rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                whileHover={{ scale: files.length > 0 && !uploading ? 1.05 : 1 }} 
+                                whileTap={{ scale: files.length > 0 && !uploading ? 0.95 : 1 }}
                             >
-                                Upload & Analyze
+                                {uploading ? 'Uploading...' : 'Upload & Analyze'}
                             </motion.button>
                         </div>
                     </>

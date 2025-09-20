@@ -1,14 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { authService } from '../services/api';
 
-const AuthContext = createContext();
-
-export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
-    return context;
-};
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -27,25 +20,15 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            // Simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const result = await authService.login(email, password);
             
-            // Simulate login validation
-            if (email && password) {
-                const userData = {
-                    id: Date.now(),
-                    email,
-                    name: email.split('@')[0], // Generate name from email
-                    avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=193A83&color=fff`
-                };
-                
-                setUser(userData);
+            if (result.success) {
+                setUser(result.data);
                 setIsAuthenticated(true);
-                localStorage.setItem('user', JSON.stringify(userData));
-                return { success: true };
-            } else {
-                return { success: false, error: 'Please provide email and password' };
+                localStorage.setItem('user', JSON.stringify(result.data));
             }
+            
+            return result;
         } catch (error) {
             return { success: false, error: 'Login failed. Please try again.' };
         }
@@ -53,25 +36,15 @@ export const AuthProvider = ({ children }) => {
 
     const signup = async (name, email, password) => {
         try {
-            // Simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const result = await authService.signup(name, email, password);
             
-            // Simulate signup validation
-            if (name && email && password) {
-                const userData = {
-                    id: Date.now(),
-                    name,
-                    email,
-                    avatar: `https://ui-avatars.com/api/?name=${name}&background=193A83&color=fff`
-                };
-                
-                setUser(userData);
+            if (result.success) {
+                setUser(result.data);
                 setIsAuthenticated(true);
-                localStorage.setItem('user', JSON.stringify(userData));
-                return { success: true };
-            } else {
-                return { success: false, error: 'Please provide all required fields' };
+                localStorage.setItem('user', JSON.stringify(result.data));
             }
+            
+            return result;
         } catch (error) {
             return { success: false, error: 'Signup failed. Please try again.' };
         }
@@ -79,29 +52,31 @@ export const AuthProvider = ({ children }) => {
 
     const loginWithGoogle = async () => {
         try {
-            // Simulate Google OAuth delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const result = await authService.loginWithGoogle();
             
-            const userData = {
-                id: Date.now(),
-                name: 'Google User',
-                email: 'user@gmail.com',
-                avatar: 'https://ui-avatars.com/api/?name=Google+User&background=193A83&color=fff'
-            };
+            if (result.success) {
+                setUser(result.data);
+                setIsAuthenticated(true);
+                localStorage.setItem('user', JSON.stringify(result.data));
+            }
             
-            setUser(userData);
-            setIsAuthenticated(true);
-            localStorage.setItem('user', JSON.stringify(userData));
-            return { success: true };
+            return result;
         } catch (error) {
             return { success: false, error: 'Google login failed. Please try again.' };
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        setIsAuthenticated(false);
-        localStorage.removeItem('user');
+    const logout = async () => {
+        try {
+            await authService.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            setUser(null);
+            setIsAuthenticated(false);
+            localStorage.removeItem('user');
+            localStorage.removeItem('authToken');
+        }
     };
 
     const value = {

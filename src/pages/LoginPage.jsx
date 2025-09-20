@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -13,7 +13,6 @@ const LoginPage = () => {
     const { login, loginWithGoogle, isAuthenticated, loading } = useAuth();
     const navigate = useNavigate();
 
-    // Redirect if already authenticated
     useEffect(() => {
         if (!loading && isAuthenticated) {
             navigate('/dashboard');
